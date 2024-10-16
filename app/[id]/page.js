@@ -10,32 +10,11 @@ import {
 } from "@mui/material";
 import CopyButton from "./CopyButton";
 import Loader from "./Loader";
-import NoteHead from "../../components/NoteHead";
-
 // This is a server component
 const NotePage = async ({ params }) => {
   const { id } = params;
   let notes = null;
   let error = null;
-  const noteTitle = "Shared HTML Code";
-  const noteDescription = `
-    Here's a simple HTML snippet that you can copy:
-    <pre>
-      <code>
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <title>My Webpage</title>
-          </head>
-          <body>
-            <h1>Hello, World!</h1>
-            <p>This is a basic webpage template.</p>
-          </body>
-        </html>
-      </code>
-    </pre>
-  `;
-  const shareUrl = `https://share-notes-five.vercel.app/${id}`;
 
   try {
     const response = await fetch(`https://sharenotes-nu.vercel.app/${id}`, {
@@ -109,13 +88,6 @@ const NotePage = async ({ params }) => {
         marginTop: 4,
       }}
     >
-      <NoteHead
-        title={`Shared Note: ${noteTitle}`}
-        description="A shared HTML snippet that you can view and copy."
-        url={shareUrl}
-        image="https://your-app-url.com/note-thumbnail.png"
-      />
-
       <Grid container justifyContent="center">
         {error ? (
           // Display a user-friendly error message

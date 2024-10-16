@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import "quill/dist/quill.snow.css";
 import Loader from "./[id]/Loader";
-import NoteHead from "@/components/NoteHead";
 
 // Load Quill dynamically
 const QuillNoSSRWrapper = dynamic(() => import("react-quill"), { ssr: false });
@@ -28,26 +27,6 @@ export default function Home() {
   const [notesURL, setNotesURL] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const noteTitle = "Shared HTML Code";
-  const noteDescription = `
-    Here's a simple HTML snippet that you can copy:
-    <pre>
-      <code>
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <title>My Webpage</title>
-          </head>
-          <body>
-            <h1>Hello, World!</h1>
-            <p>This is a basic webpage template.</p>
-          </body>
-        </html>
-      </code>
-    </pre>
-  `;
-  const shareUrl = `https://share-notes-five.vercel.app`;
 
   const handleShare = async () => {
     if (!note && !code && !htmlContent) {
@@ -124,13 +103,6 @@ export default function Home() {
       // minHeight="100vh"
       padding={4}
     >
-      <NoteHead
-        title={`Shared Note: ${noteTitle}`}
-        description="A shared HTML snippet that you can view and copy."
-        url={shareUrl}
-        image="https://your-app-url.com/note-thumbnail.png"
-      />
-
       <Typography variant="h6" fontWeight="bold" gutterBottom>
         SHARE NOTES, CODE, HTML
       </Typography>
