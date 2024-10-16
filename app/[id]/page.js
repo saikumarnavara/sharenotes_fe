@@ -9,7 +9,7 @@ import {
   Link,
 } from "@mui/material";
 import CopyButton from "./CopyButton";
-// import Loader from "./Loader";
+import Loader from "./Loader";
 // This is a server component
 const NotePage = async ({ params }) => {
   const { id } = params;
@@ -148,22 +148,29 @@ const NotePage = async ({ params }) => {
                 }}
               >
                 <Grid item xs={12} md={6}>
-                  <Typography
-                    gutterBottom
-                    sx={{
-                      backgroundColor: "#ffe082",
-                      color: "#000",
-                      padding: "8px 8px",
-                      borderRadius: "8px",
-                      display: "inline-block",
-                      fontWeight: "bold",
-                      textTransform: "uppercase",
-                      letterSpacing: "1px",
-                      fontSize: "1rem",
-                    }}
+                  <Link
+                    href="/"
+                    underline="none"
+                    sx={{ textDecoration: "none" }}
                   >
-                    Share Notes
-                  </Typography>
+                    <Typography
+                      gutterBottom
+                      sx={{
+                        backgroundColor: "#ffe082",
+                        color: "#000",
+                        padding: "8px 8px",
+                        borderRadius: "8px",
+                        display: "inline-block",
+                        fontWeight: "bold",
+                        textTransform: "uppercase",
+                        letterSpacing: "1px",
+                        fontSize: "1rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Share Notes
+                    </Typography>
+                  </Link>
                 </Grid>
 
                 <Grid item xs={12} md={6}>
