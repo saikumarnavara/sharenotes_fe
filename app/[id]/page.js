@@ -9,7 +9,7 @@ import {
   Link,
 } from "@mui/material";
 import CopyButton from "./CopyButton";
-import Loader from "./Loader";
+// import Loader from "./Loader";
 // This is a server component
 const NotePage = async ({ params }) => {
   const { id } = params;
@@ -49,7 +49,15 @@ const NotePage = async ({ params }) => {
         );
       case "code":
         return (
-          <Paper elevation={3} sx={{ backgroundColor: "#f5f5f5", padding: 2 }}>
+          <Paper
+            elevation={3}
+            sx={{
+              backgroundColor: "#f5f5f5",
+              padding: 2,
+              width: "100%",
+              overflow: "scroll",
+            }}
+          >
             <Typography component="pre" variant="body2" gutterBottom>
               {notes.msg}
             </Typography>
@@ -120,7 +128,12 @@ const NotePage = async ({ params }) => {
                 spacing={2}
                 mb={2}
                 wrap="nowrap"
-                sx={{ borderBottom: "1px solid #e0e0e0", pb: 2 }}
+                sx={{
+                  borderBottom: "1px solid #e0e0e0",
+                  pb: 2,
+                  width: "100%",
+                  overflow: "scroll",
+                }}
               >
                 <Grid item>
                   <Typography

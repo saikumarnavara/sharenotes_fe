@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import MonacoEditor from "react-monaco-editor";
+// import MonacoEditor from "react-monaco-editor";
+const MonacoEditor = dynamic(() => import("react-monaco-editor"), {
+  ssr: false,
+});
 import dynamic from "next/dynamic";
 import {
   Box,
@@ -58,13 +61,19 @@ export default function Home() {
                 : activeTab === "shareCode"
                 ? code
                 : htmlContent,
-            response_type: responseType, // Adding response_type to the payload
+            response_type: responseType,
           }),
         }
       );
       const data = await response.json();
-      const fullURL = `${window.location.origin}/${data.note_id}`;
-      setNotesURL(fullURL);
+      // const fullURL = `${window.location.origin}/${data.note_id}`;
+      // setNotesURL(fullURL);
+
+      // Ensure this runs only in the browser
+      if (typeof window !== "undefined") {
+        const fullURL = `${window.location.origin}/${data.note_id}`;
+        setNotesURL(fullURL);
+      }
 
       if (response.ok) {
         setMessage("Content shared successfully!");
@@ -229,7 +238,7 @@ export default function Home() {
           </Button>
         </Box>
       </Modal>
-      {loading && <Loader />}
+      {loading ? <Loader /> : null}
     </Box>
   );
 }
