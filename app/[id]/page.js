@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Container,
+  Stack,
   Paper,
   Typography,
   Grid,
@@ -51,14 +51,26 @@ const NotePage = async ({ params }) => {
         return (
           <Paper
             elevation={3}
+            width="100%"
             sx={{
-              backgroundColor: "#f5f5f5",
+              backgroundColor: "black",
               padding: 2,
               width: "100%",
               overflow: "scroll",
             }}
           >
-            <Typography component="pre" variant="body2" gutterBottom>
+            <Typography
+              component="pre"
+              variant="body2"
+              gutterBottom
+              sx={{
+                fontFamily: "monospace",
+                padding: 2,
+                width: "100%",
+                color: "white",
+                overflow: "scroll",
+              }}
+            >
               {notes.msg}
             </Typography>
           </Paper>
@@ -85,8 +97,7 @@ const NotePage = async ({ params }) => {
   };
 
   return (
-    <Container
-      maxWidth="false"
+    <Box
       sx={{
         minHeight: "100vh",
         display: "flex",
@@ -111,7 +122,7 @@ const NotePage = async ({ params }) => {
           </Grid>
         ) : notes ? (
           // Display the note if available
-          <Grid item xs={12} sm={10} md={8} lg={6}>
+          <Grid item width="100%">
             <Paper
               elevation={3}
               sx={{
@@ -120,6 +131,7 @@ const NotePage = async ({ params }) => {
                 boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                 borderRadius: "12px",
               }}
+              width="100%"
             >
               <Grid
                 container
@@ -132,10 +144,10 @@ const NotePage = async ({ params }) => {
                   borderBottom: "1px solid #e0e0e0",
                   pb: 2,
                   width: "100%",
-                  overflow: "scroll",
+                  overflowX: "auto",
                 }}
               >
-                <Grid item>
+                <Grid item xs={12} md={6}>
                   <Typography
                     gutterBottom
                     sx={{
@@ -154,28 +166,36 @@ const NotePage = async ({ params }) => {
                   </Typography>
                 </Grid>
 
-                <Grid item>
-                  <CopyButton text={notes.msg} />
-                </Grid>
-
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    component={Link}
-                    href="/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <Grid item xs={12} md={6}>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                      justifyContent: { xs: "flex-start", md: "flex-end" },
+                      width: "100%",
+                      overflowX: "auto", // Enables scrolling when content exceeds available width
+                    }}
                   >
-                    Go to Notes
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Random
-                  </Button>
+                    <CopyButton text={notes.msg} />
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      component={Link}
+                      href="/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Go to Notes
+                    </Button>
+
+                    <Button variant="contained" color="primary">
+                      Random
+                    </Button>
+                  </Stack>
                 </Grid>
               </Grid>
+
               {/* Render content based on the response type */}
               {renderContent()}
             </Paper>
@@ -184,7 +204,7 @@ const NotePage = async ({ params }) => {
           <Loader />
         )}
       </Grid>
-    </Container>
+    </Box>
   );
 };
 
