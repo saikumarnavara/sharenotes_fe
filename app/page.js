@@ -1,19 +1,70 @@
 "use client";
+
 import { useState } from "react";
+import MonacoEditor from "react-monaco-editor";
+import dynamic from "next/dynamic";
+import {
+  Box,
+  Button,
+  Modal,
+  Typography,
+  Tabs,
+  Tab,
+  TextField,
+} from "@mui/material";
+import "quill/dist/quill.snow.css";
+import Loader from "./[id]/Loader";
+import NoteHead from "@/components/NoteHead";
+
+// Load Quill dynamically
+const QuillNoSSRWrapper = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState("shareNotes");
   const [note, setNote] = useState("");
+  const [code, setCode] = useState("");
+  const [htmlContent, setHtmlContent] = useState("");
   const [message, setMessage] = useState("");
   const [notesURL, setNotesURL] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const noteTitle = "Shared HTML Code";
+  const noteDescription = `
+    Here's a simple HTML snippet that you can copy:
+    <pre>
+      <code>
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <title>My Webpage</title>
+          </head>
+          <body>
+            <h1>Hello, World!</h1>
+            <p>This is a basic webpage template.</p>
+          </body>
+        </html>
+      </code>
+    </pre>
+  `;
+  const shareUrl = `https://share-notes-five.vercel.app`;
 
   const handleShare = async () => {
-    if (!note) {
-      setMessage("Please write a note before sharing!");
+    if (!note && !code && !htmlContent) {
+      setMessage("Please add content before sharing!");
       return;
+    }
+    let responseType;
+    if (activeTab === "shareNotes") {
+      responseType = "note";
+    } else if (activeTab === "shareCode") {
+      responseType = "code";
+    } else if (activeTab === "shareHtml") {
+      responseType = "html";
     }
 
     try {
+      setLoading(true);
       const response = await fetch(
         "https://sharenotes-nu.vercel.app/createnote",
         {
@@ -22,24 +73,32 @@ export default function Home() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            note: note,
+            note:
+              activeTab === "shareNotes"
+                ? note
+                : activeTab === "shareCode"
+                ? code
+                : htmlContent,
+            response_type: responseType, // Adding response_type to the payload
           }),
         }
       );
       const data = await response.json();
-      // const fullURL = `http://localhost:3000/${data.note_id}`;
       const fullURL = `${window.location.origin}/${data.note_id}`;
       setNotesURL(fullURL);
 
       if (response.ok) {
-        setMessage("Note shared successfully!");
+        setMessage("Content shared successfully!");
         setNote("");
+        setCode("");
+        setHtmlContent("");
         setIsModalOpen(true);
+        setLoading(false);
       } else {
-        setMessage("Failed to share the note.");
+        setMessage("Failed to share the content.");
       }
     } catch (error) {
-      setMessage("Error sharing the note.");
+      setMessage("Error sharing the content.");
     }
   };
 
@@ -52,61 +111,153 @@ export default function Home() {
     window.open(notesURL, "_blank");
   };
 
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1 className="text-3xl font-bold">SHARE NOTES</h1>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      // minHeight="100vh"
+      padding={4}
+    >
+      <NoteHead
+        title={`Shared Note: ${noteTitle}`}
+        description="A shared HTML snippet that you can view and copy."
+        url={shareUrl}
+        image="https://your-app-url.com/note-thumbnail.png"
+      />
 
-      <div className="w-full sm:w-3/4 lg:w-2/3 xl:w-1/2">
-        <textarea
-          className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 resize-none"
-          rows="6"
-          placeholder="Write your note here..."
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-        ></textarea>
-      </div>
+      <Typography variant="h6" fontWeight="bold" gutterBottom>
+        SHARE NOTES, CODE, HTML
+      </Typography>
 
-      <button
-        onClick={handleShare}
-        className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-all"
+      {/* Tab Navigation */}
+      <Tabs
+        value={activeTab}
+        onChange={handleTabChange}
+        textColor="primary"
+        indicatorColor="primary"
+        centered
       >
-        Share Note
-      </button>
+        <Tab label="Share Notes" value="shareNotes" />
+        <Tab label="Share Code" value="shareCode" />
+        <Tab label="Share HTML" value="shareHtml" />
+      </Tabs>
 
-      {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+      {/* Content for each tab */}
+      <Box mt={4} width={{ xs: "100%", sm: "75%", lg: "60%" }}>
+        {activeTab === "shareNotes" && (
+          <TextField
+            fullWidth
+            multiline
+            rows={6}
+            variant="outlined"
+            placeholder="Write your note here..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+        )}
+
+        {activeTab === "shareCode" && (
+          <Box mt={2} style={{ height: "200px" }}>
+            <MonacoEditor
+              height="100%"
+              language="javascript"
+              theme="vs-dark"
+              value={code}
+              onChange={(value) => setCode(value)}
+              options={{
+                selectOnLineNumbers: true,
+                automaticLayout: true,
+              }}
+            />
+          </Box>
+        )}
+
+        {activeTab === "shareHtml" && (
+          <Box mt={2}>
+            <QuillNoSSRWrapper
+              theme="snow"
+              value={htmlContent}
+              onChange={setHtmlContent}
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, 3, false] }],
+                  ["bold", "italic", "underline"],
+                  [{ list: "ordered" }, { list: "bullet" }],
+                  ["link", "image"],
+                  ["clean"],
+                ],
+              }}
+              placeholder="Write your HTML content here..."
+            />
+          </Box>
+        )}
+      </Box>
+
+      <Box mt={4}>
+        <Button variant="contained" color="primary" onClick={handleShare}>
+          Share Content
+        </Button>
+      </Box>
+
+      {message && (
+        <Typography mt={2} color="error" align="center">
+          {message}
+        </Typography>
+      )}
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-md shadow-lg w-96">
-            <h2 className="text-2xl font-bold mb-4">
-              Note Shared Successfully!
-            </h2>
-            <p className="mb-4">Your note URL:</p>
-            <p className="mb-4 text-blue-500 underline">{notesURL}</p>
-            <div className="flex gap-4">
-              <button
-                onClick={handleCopy}
-                className="px-6 py-3 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 transition-all"
-              >
-                Copy URL
-              </button>
-              <button
-                onClick={handleOpen}
-                className="px-6 py-3 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition-all"
-              >
-                Open in New Tab
-              </button>
-            </div>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="mt-4 px-6 py-3 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-all"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 24,
+            outline: "none", // Ensure no border on focus
+          }}
+        >
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
+            Content Shared Successfully!
+          </Typography>
+          <Typography gutterBottom>Your content URL:</Typography>
+          <Typography
+            gutterBottom
+            color="primary"
+            style={{ wordWrap: "break-word" }}
+          >
+            {notesURL}
+          </Typography>
+          <Box display="flex" justifyContent="space-between" mt={2}>
+            <Button variant="contained" color="secondary" onClick={handleCopy}>
+              Copy URL
+            </Button>
+            <Button variant="contained" color="success" onClick={handleOpen}>
+              Open in New Tab
+            </Button>
+          </Box>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setIsModalOpen(false)}
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Close
+          </Button>
+        </Box>
+      </Modal>
+      {loading && <Loader />}
+    </Box>
   );
 }
