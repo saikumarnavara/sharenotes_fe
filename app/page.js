@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTheme } from "@mui/material/styles";
 // import MonacoEditor from "react-monaco-editor";
 const MonacoEditor = dynamic(() => import("react-monaco-editor"), {
   ssr: false,
@@ -14,9 +15,12 @@ import {
   Tabs,
   Tab,
   TextField,
+  useMediaQuery,
+  Grid,
 } from "@mui/material";
 import "quill/dist/quill.snow.css";
 import Loader from "./[id]/Loader";
+import { FileUploader } from "react-drag-drop-files";
 
 // Load Quill dynamically
 const QuillNoSSRWrapper = dynamic(() => import("react-quill"), { ssr: false });
@@ -29,10 +33,16 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [notesURL, setNotesURL] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  // const [imageBase64, setImageBase64] = useState("");
+  // console.log(image);
 
+  const fileTypes = ["JPG", "PNG", "GIF"];
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const handleShare = async () => {
-    if (!note && !code && !htmlContent) {
+    if (!note && !code && !htmlContent && !image) {
       setMessage("Please add content before sharing!");
       return;
     }
@@ -43,6 +53,8 @@ export default function Home() {
       responseType = "code";
     } else if (activeTab === "shareHtml") {
       responseType = "html";
+    } else if (activeTab === "shareImage") {
+      responseType = "image";
     }
 
     try {
@@ -60,11 +72,20 @@ export default function Home() {
                 ? note
                 : activeTab === "shareCode"
                 ? code
-                : htmlContent,
+                : activeTab === "shareHtml"
+                ? htmlContent
+                : activeTab === "shareImage"
+                ? image
+                : "",
             response_type: responseType,
           }),
         }
       );
+      if (response.status !== 200) {
+        setMessage("Failed to share the content.");
+        setLoading(false);
+        return;
+      }
       const data = await response.json();
       // const fullURL = `${window.location.origin}/${data.note_id}`;
       // setNotesURL(fullURL);
@@ -82,11 +103,13 @@ export default function Home() {
         setHtmlContent("");
         setIsModalOpen(true);
         setLoading(false);
+        setImage(null);
       } else {
         setMessage("Failed to share the content.");
       }
     } catch (error) {
-      setMessage("Error sharing the content.");
+      setMessage("Error sharing the content.", error);
+      setLoading(false);
     }
   };
 
@@ -102,6 +125,27 @@ export default function Home() {
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
+  const handlePasteCode = async () => {
+    try {
+      // Read clipboard content
+      const text = await navigator.clipboard.readText();
+      // Update the code state with the clipboard content
+      setCode(text);
+    } catch (err) {
+      console.error("Failed to read clipboard contents: ", err);
+    }
+  };
+  const handleImageToBase64 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      // setImageBase64(reader.result); // Set base64 string of the image
+      setImage(reader.result);
+    };
+    reader.onerror = (error) => {
+      console.error("Error converting image to base64:", error);
+    };
+  };
 
   return (
     <Box
@@ -112,19 +156,24 @@ export default function Home() {
       // minHeight="100vh"
       padding={4}
     >
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        SHARE NOTES, CODE, HTML
+      <Typography
+        variant={isMobile ? "subtitle1" : "h6"} // Smaller font for mobile
+        fontWeight="bold"
+        gutterBottom
+      >
+        SHARE NOTES, IMAGE, CODE, HTML
       </Typography>
-
-      {/* Tab Navigation */}
       <Tabs
         value={activeTab}
         onChange={handleTabChange}
         textColor="primary"
         indicatorColor="primary"
-        centered
+        centered={!isMobile}
+        variant={isMobile ? "scrollable" : "standard"}
+        scrollButtons={isMobile ? "auto" : "off"}
       >
         <Tab label="Share Notes" value="shareNotes" />
+        <Tab label="Share Image" value="shareImage" />
         <Tab label="Share Code" value="shareCode" />
         <Tab label="Share HTML" value="shareHtml" />
       </Tabs>
@@ -144,7 +193,7 @@ export default function Home() {
         )}
 
         {activeTab === "shareCode" && (
-          <Box mt={2} style={{ height: "200px" }}>
+          <Box mt={2} style={{ height: "300px" }}>
             <MonacoEditor
               height="100%"
               language="javascript"
@@ -154,6 +203,9 @@ export default function Home() {
               options={{
                 selectOnLineNumbers: true,
                 automaticLayout: true,
+              }}
+              editorDidMount={(editor) => {
+                editor.focus();
               }}
             />
           </Box>
@@ -179,11 +231,66 @@ export default function Home() {
           </Box>
         )}
       </Box>
+      {activeTab === "shareImage" && (
+        <Box mt={4}>
+          <FileUploader
+            handleChange={(file) => {
+              setImage(file);
+              handleImageToBase64(file);
+            }}
+            name="file"
+            types={fileTypes}
+            fileOrFiles={image}
+            label="Upload or drag and drop an image"
+            multiple={false}
+            maxSize={2}
+            onTypeError={(err) => alert(err)}
+            onSizeError={(err) => alert(err)}
+          />
+        </Box>
+      )}
 
       <Box mt={4}>
-        <Button variant="contained" color="primary" onClick={handleShare}>
-          Share Content
-        </Button>
+        {activeTab === "shareCode" && (
+          <Grid container spacing={isMobile ? 2 : 3}>
+            <Grid item xs={12} sm="auto">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePasteCode}
+                fullWidth={isMobile} // Button takes full width on mobile
+              >
+                Paste Code
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm="auto">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setCode("")}
+                fullWidth={isMobile} // Button takes full width on mobile
+              >
+                Clear Code
+              </Button>
+            </Grid>
+          </Grid>
+        )}
+        <Grid
+          container
+          justifyContent={isMobile ? "center" : "flex-start"}
+          spacing={isMobile ? 2 : 3}
+        >
+          <Grid item xs={12} sm="auto">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleShare}
+              fullWidth={isMobile}
+            >
+              Share Content
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
 
       {message && (

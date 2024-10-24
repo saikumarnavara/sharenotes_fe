@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import CopyButton from "./CopyButton";
 import Loader from "./Loader";
+import ImageWithDownloadButton from "./ImageWithDownload";
 // This is a server component
 const NotePage = async ({ params }) => {
   const { id } = params;
@@ -87,6 +88,9 @@ const NotePage = async ({ params }) => {
             dangerouslySetInnerHTML={{ __html: notes.msg }}
           />
         );
+      case "image":
+        return <ImageWithDownloadButton notes={notes} />;
+
       default:
         return (
           <Typography variant="body1" color="textSecondary">
