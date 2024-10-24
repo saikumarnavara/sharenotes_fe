@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  Stack,
-  Paper,
-  Typography,
-  Grid,
-  Box,
-  Button,
-  Link,
-} from "@mui/material";
+import { Stack, Paper, Typography, Grid, Button, Link } from "@mui/material";
 import CopyButton from "./CopyButton";
 import Loader from "./Loader";
 import ImageWithDownloadButton from "./ImageWithDownload";
+import Footer from "./Footer";
+
 // This is a server component
 const NotePage = async ({ params }) => {
   const { id } = params;
@@ -22,7 +16,6 @@ const NotePage = async ({ params }) => {
       cache: "no-store",
     });
 
-    // Check if the response is OK (status 200–299)
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error("Note not found.");
@@ -31,10 +24,8 @@ const NotePage = async ({ params }) => {
       }
     }
 
-    // Parse the response data
     notes = await response.json();
   } catch (err) {
-    // Catch any errors and set the error message
     error = err.message || "Something went wrong.";
     console.error("Error fetching note:", error);
   }
@@ -52,10 +43,9 @@ const NotePage = async ({ params }) => {
         return (
           <Paper
             elevation={3}
-            width="100%"
             sx={{
               backgroundColor: "black",
-              padding: 2,
+              padding: { xs: 1, sm: 2 },
               width: "100%",
               overflow: "scroll",
             }}
@@ -66,10 +56,9 @@ const NotePage = async ({ params }) => {
               gutterBottom
               sx={{
                 fontFamily: "monospace",
-                padding: 2,
-                width: "100%",
+                padding: { xs: 1, sm: 2 },
                 color: "white",
-                overflow: "scroll",
+                overflowX: "scroll",
               }}
             >
               {notes.msg}
@@ -78,9 +67,8 @@ const NotePage = async ({ params }) => {
         );
       case "html":
         return (
-          <Box
-            component="div"
-            sx={{
+          <div
+            style={{
               "& h1, h2, h3, p": {
                 marginBottom: "16px",
               },
@@ -90,7 +78,6 @@ const NotePage = async ({ params }) => {
         );
       case "image":
         return <ImageWithDownloadButton notes={notes} />;
-
       default:
         return (
           <Typography variant="body1" color="textSecondary">
@@ -101,121 +88,104 @@ const NotePage = async ({ params }) => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        backgroundColor: "rgba(255, 255, 255, 0.1)",
-        padding: 4,
-        marginTop: 4,
-      }}
-    >
-      <Grid container justifyContent="center">
-        {error ? (
-          // Display a user-friendly error message
-          <Grid item xs={12} sm={10} md={8} lg={6}>
-            <Paper elevation={3} sx={{ padding: 3, textAlign: "center" }}>
-              <Typography variant="h6" gutterBottom color="error">
-                Error
-              </Typography>
-              <Typography variant="body2" color="error">
-                {error}
-              </Typography>
-            </Paper>
-          </Grid>
-        ) : notes ? (
-          // Display the note if available
-          <Grid item width="100%">
-            <Paper
-              elevation={3}
+    <Grid>
+      {error ? (
+        <Grid item xs={12} sm={10} md={8} lg={6}>
+          <Paper elevation={3} sx={{ padding: 3, textAlign: "center" }}>
+            <Typography variant="h6" gutterBottom color="error">
+              Error
+            </Typography>
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
+          </Paper>
+        </Grid>
+      ) : notes ? (
+        <Grid item xs={12} sm={12} md={10} lg={8}>
+          <Paper
+            elevation={0}
+            sx={{
+              padding: { xs: 2, sm: 4 },
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              borderRadius: "12px",
+              width: "100%",
+            }}
+          >
+            <Grid
+              container
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+              mb={2}
+              wrap="nowrap"
               sx={{
-                padding: 4,
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                borderRadius: "12px",
+                borderBottom: "1px solid #e0e0e0",
+                pb: 2,
+                width: "100%",
+                overflowX: "auto",
               }}
-              width="100%"
             >
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-                spacing={2}
-                mb={2}
-                wrap="nowrap"
-                sx={{
-                  borderBottom: "1px solid #e0e0e0",
-                  pb: 2,
-                  width: "100%",
-                  overflowX: "auto",
-                }}
-              >
-                <Grid item xs={12} md={6}>
-                  <Link
-                    href="/"
-                    underline="none"
-                    sx={{ textDecoration: "none" }}
-                  >
-                    <Typography
-                      gutterBottom
-                      sx={{
-                        backgroundColor: "#ffe082",
-                        color: "#000",
-                        padding: "8px 8px",
-                        borderRadius: "8px",
-                        display: "inline-block",
-                        fontWeight: "bold",
-                        textTransform: "uppercase",
-                        letterSpacing: "1px",
-                        fontSize: "1rem",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Share Notes
-                    </Typography>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Stack
-                    direction="row"
-                    spacing={2}
+              <Grid item xs={12} md={6}>
+                <Link href="/" underline="none" sx={{ textDecoration: "none" }}>
+                  <Typography
+                    gutterBottom
                     sx={{
-                      justifyContent: { xs: "flex-start", md: "flex-end" },
-                      width: "100%",
-                      overflowX: "auto", // Enables scrolling when content exceeds available width
+                      backgroundColor: "#ffe082",
+                      color: "#000",
+                      padding: "8px 8px",
+                      borderRadius: "8px",
+                      display: "inline-block",
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                      letterSpacing: "1px",
+                      fontSize: { xs: "0.85rem", sm: "1rem" },
+                      cursor: "pointer",
                     }}
                   >
-                    <CopyButton text={notes.msg} />
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      component={Link}
-                      href="/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Go to Notes
-                    </Button>
-
-                    <Button variant="contained" color="primary">
-                      Random
-                    </Button>
-                  </Stack>
-                </Grid>
+                    Share Notes
+                  </Typography>
+                </Link>
               </Grid>
 
-              {/* Render content based on the response type */}
-              {renderContent()}
-            </Paper>
-          </Grid>
-        ) : (
-          <Loader />
-        )}
+              <Grid item xs={12} md={6}>
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={2}
+                  sx={{
+                    justifyContent: { xs: "flex-start", md: "flex-end" },
+                    width: "100%",
+                    overflowX: "auto",
+                  }}
+                >
+                  <CopyButton text={notes.msg} />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    href="/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Go to Notes
+                  </Button>
+
+                  <Button variant="contained" color="primary">
+                    Random
+                  </Button>
+                </Stack>
+              </Grid>
+            </Grid>
+
+            {renderContent()}
+          </Paper>
+        </Grid>
+      ) : (
+        <Loader />
+      )}
+      <Grid item xs={12}>
+        <Footer />
       </Grid>
-    </Box>
+    </Grid>
   );
 };
 
