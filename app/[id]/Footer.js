@@ -20,7 +20,7 @@ const Footer = () => {
       <Typography variant="body2" color="textSecondary">
         Visit our website at{" "}
         <Link
-          href="https://www.grow-more-psi.vercel.app"
+          href="https://grow-more-psi.vercel.app"
           target="_blank"
           rel="noopener noreferrer"
           underline="hover"
