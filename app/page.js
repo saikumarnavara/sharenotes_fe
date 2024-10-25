@@ -25,6 +25,8 @@ import { FileUploader } from "react-drag-drop-files";
 import Footer from "./[id]/Footer";
 import Header from "./[id]/Header";
 import { FireworksAnimations } from "./[id]/Fireworks";
+import { FaFacebook, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import ShimmerButton from "@/components/ui/shimmer-button";
 
 // Load Quill dynamically
 const QuillNoSSRWrapper = dynamic(() => import("react-quill"), { ssr: false });
@@ -39,8 +41,6 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  // const [imageBase64, setImageBase64] = useState("");
-  // console.log(image);
 
   const fileTypes = ["JPG", "PNG", "GIF"];
   const theme = useTheme();
@@ -144,12 +144,29 @@ export default function Home() {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      // setImageBase64(reader.result); // Set base64 string of the image
       setImage(reader.result);
     };
     reader.onerror = (error) => {
       console.error("Error converting image to base64:", error);
     };
+  };
+  const handleWhatsappShare = () => {
+    const url = encodeURIComponent(notesURL);
+    const whatsappUrl = `https://wa.me/?text=${url}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
+  // Function to handle Facebook sharing
+  const handleFacebookShare = () => {
+    const url = encodeURIComponent(notesURL);
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    window.open(facebookUrl, "_blank");
+  };
+  const handleTwitterShare = () => {
+    const url = encodeURIComponent(notesURL);
+    const text = encodeURIComponent("Check out this content!");
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+    window.open(twitterUrl, "_blank");
   };
 
   return (
@@ -190,6 +207,7 @@ export default function Home() {
         <Box mt={4} width={{ xs: "100%", sm: "75%", lg: "60%" }}>
           {activeTab === "shareNotes" && (
             <TextField
+              id="outlined-multiline-flexible"
               fullWidth
               multiline
               rows={6}
@@ -197,6 +215,12 @@ export default function Home() {
               placeholder="Write your note here..."
               value={note}
               onChange={(e) => setNote(e.target.value)}
+              // sx={{
+              //   minHeight: "400px",
+              //   backgroundColor: "#f5f5f5",
+              //   borderRadius: "10px",
+              //   boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+              // }}
             />
           )}
 
@@ -266,8 +290,8 @@ export default function Home() {
               spacing={isMobile ? 2 : 3}
               justifyContent={isMobile ? "center" : "flex-start"}
               sx={{
-                flexDirection: isMobile ? "column" : "row", // Stack on mobile, row on larger screens
-                alignItems: "center", // Center items vertically in a row layout
+                flexDirection: isMobile ? "column" : "row",
+                alignItems: "center",
               }}
             >
               <Grid item xs={12} sm="auto">
@@ -286,7 +310,7 @@ export default function Home() {
               <Grid item xs={12} sm="auto">
                 <Button
                   variant="contained"
-                  color="error" // Changed to "error" instead of "danger" for Material-UI color
+                  color="error"
                   onClick={() => setCode("")}
                   fullWidth={isMobile}
                   sx={{
@@ -306,14 +330,12 @@ export default function Home() {
             spacing={isMobile ? 2 : 3}
             sx={{
               mt: 2,
-              flexDirection: isMobile ? "column" : "row", // Stack on mobile, row on larger screens
-              alignItems: "center", // Center items vertically in a row layout
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: "center",
             }}
           >
             <Grid item xs={12} sm="auto">
-              <Button
-                variant="contained"
-                color="primary"
+              <ShimmerButton
                 onClick={handleShare}
                 fullWidth={isMobile}
                 sx={{
@@ -321,7 +343,7 @@ export default function Home() {
                 }}
               >
                 Share Content
-              </Button>
+              </ShimmerButton>
             </Grid>
           </Grid>
         </Box>
@@ -340,12 +362,13 @@ export default function Home() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: 400,
+              width: { xs: "90%", sm: 400 },
               bgcolor: "background.paper",
               p: 4,
               borderRadius: 2,
               boxShadow: 24,
               outline: "none",
+              width: isMobile ? "90%" : "auto",
             }}
           >
             <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -359,18 +382,67 @@ export default function Home() {
             >
               {notesURL}
             </Typography>
-            <Box display="flex" justifyContent="space-between" mt={2}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              mt={2}
+              flexWrap="wrap"
+            >
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={handleCopy}
+                sx={{ mb: { xs: 1, sm: 0 }, flexGrow: 1, mr: 1 }}
               >
                 Copy URL
               </Button>
-              <Button variant="contained" color="success" onClick={handleOpen}>
-                Open in New Tab
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleOpen}
+                sx={{ mb: { xs: 1, sm: 0 }, flexGrow: 1, ml: 1 }}
+              >
+                Open
               </Button>
             </Box>
+
+            <Box
+              display="flex"
+              flexDirection={isMobile ? "column" : "row"} // Column layout on mobile
+              justifyContent={isMobile ? "center" : "space-around"}
+              alignItems="center"
+              mt={2}
+              gap={1}
+            >
+              <Button
+                variant="outlined"
+                startIcon={<FaWhatsapp />}
+                onClick={handleWhatsappShare}
+                color="success"
+                sx={{ width: isMobile ? "100%" : "auto" }}
+              >
+                WhatsApp
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<FaFacebook />}
+                onClick={handleFacebookShare}
+                color="primary"
+                sx={{ width: isMobile ? "100%" : "auto" }}
+              >
+                Facebook
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<FaTwitter />}
+                onClick={handleTwitterShare}
+                color="info"
+                sx={{ width: isMobile ? "100%" : "auto" }}
+              >
+                Twitter
+              </Button>
+            </Box>
+
             <Button
               variant="contained"
               color="error"

@@ -7,22 +7,33 @@ import {
   useTheme,
   Box,
 } from "@mui/material";
+import SparklesText from "@/components/ui/sparkles-text";
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <AppBar position="static" color="primary">
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "#000",
+        boxShadow: "none",
+        padding: { xs: 1, sm: 2 },
+      }}
+    >
       <Toolbar>
         <Box sx={{ flexGrow: 1, textAlign: isMobile ? "center" : "center" }}>
-          <Typography
+          {/* <Typography
             variant={isMobile ? "subtitle1" : "h6"}
             fontWeight="bold"
             gutterBottom
-          >
-            SHARE NOTES, IMAGE, CODE, HTML
-          </Typography>
+          > */}
+          <SparklesText
+            text="Share-Notes"
+            fontSize={isMobile ? "38px" : "h6"}
+          />
+          {/* </Typography> */}
         </Box>
       </Toolbar>
     </AppBar>
