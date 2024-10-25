@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
-import Footer from "./[id]/Footer";
 // import MonacoEditor from "react-monaco-editor";
 const MonacoEditor = dynamic(() => import("react-monaco-editor"), {
   ssr: false,
@@ -18,10 +17,14 @@ import {
   TextField,
   useMediaQuery,
   Grid,
+  Container,
 } from "@mui/material";
 import "quill/dist/quill.snow.css";
 import Loader from "./[id]/Loader";
 import { FileUploader } from "react-drag-drop-files";
+import Footer from "./[id]/Footer";
+import Header from "./[id]/Header";
+import { FireworksAnimations } from "./[id]/Fireworks";
 
 // Load Quill dynamically
 const QuillNoSSRWrapper = dynamic(() => import("react-quill"), { ssr: false });
@@ -105,6 +108,7 @@ export default function Home() {
         setIsModalOpen(true);
         setLoading(false);
         setImage(null);
+        FireworksAnimations();
       } else {
         setMessage("Failed to share the content.");
       }
@@ -149,22 +153,24 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div
+      style={{
+        backgroundImage: "url('/background.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "#f5f5f5",
+      }}
+    >
+      <Header />
       <Box
         display="flex"
         flexDirection="column"
         alignItems="center"
-        justifyContent="center"
+        justifyContent="flex-start"
         // minHeight="100vh"
-        padding={4}
+        padding={isMobile ? 4 : 0}
       >
-        <Typography
-          variant={isMobile ? "subtitle1" : "h6"} // Smaller font for mobile
-          fontWeight="bold"
-          gutterBottom
-        >
-          SHARE NOTES, IMAGE, CODE, HTML
-        </Typography>
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -387,6 +393,6 @@ export default function Home() {
       >
         <Footer />
       </Grid>
-    </>
+    </div>
   );
 }
