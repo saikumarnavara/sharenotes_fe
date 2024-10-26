@@ -1,15 +1,10 @@
 "use client";
 import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-  useTheme,
-  Box,
-} from "@mui/material";
+import { AppBar, Toolbar, useMediaQuery, useTheme, Box } from "@mui/material";
 import SparklesText from "@/components/ui/sparkles-text";
 import Meteors from "@/components/ui/meteors";
+import sharenotes_logo from "../sharenotes_logo.png";
+import Image from "next/image";
 
 const Header = () => {
   const theme = useTheme();
@@ -33,23 +28,35 @@ const Header = () => {
           height: "100%",
           overflow: "hidden",
           pointerEvents: "none",
-          // zIndex: -1,
         }}
       >
         <Meteors number={20} />
       </Box>
       <Toolbar>
-        <Box sx={{ flexGrow: 1, textAlign: isMobile ? "center" : "center" }}>
-          {/* <Typography
-            variant={isMobile ? "subtitle1" : "h6"}
-            fontWeight="bold"
-            gutterBottom
-          > */}
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: isMobile ? "center" : "center",
+          }}
+        >
+          <Image
+            src={sharenotes_logo}
+            alt="Share-Notes-logo"
+            width={isMobile ? 30 : 50}
+            style={{
+              marginRight: "8px",
+              backgroundColor: "#fff",
+              padding: "5px",
+              borderRadius: "5px",
+              marginTop: isMobile ? "12px" : "",
+            }}
+          />
           <SparklesText
             text="Share-Notes"
             fontSize={isMobile ? "38px" : "h6"}
           />
-          {/* </Typography> */}
         </Box>
       </Toolbar>
     </AppBar>
