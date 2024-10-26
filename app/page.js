@@ -235,7 +235,7 @@ export default function Home() {
               InputProps={{
                 style: {
                   fontWeight: "bold",
-                  minHeight: "120px",
+                  minHeight: "120px ",
                 },
                 classes: {
                   notchedOutline: "custom-outline",
@@ -310,7 +310,7 @@ export default function Home() {
               spacing={isMobile ? 2 : 3}
               justifyContent={isMobile ? "center" : "flex-start"}
               sx={{
-                flexDirection: isMobile ? "column" : "row",
+                flexDirection: "row",
                 alignItems: "center",
               }}
             >

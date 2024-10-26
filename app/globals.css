@@ -96,9 +96,9 @@ body {
 
 .custom-tab-selected {
   color: black !important; /* Active tab color */
-  font-weight: bold; /* Bold text for active */
+  font-weight: bold !important;
 }
 
 .tab-indicator {
-  background-color: black; /* Indicator color for the selected tab */
+  background-color: black !important;
 }
