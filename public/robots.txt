@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: -notes-five.vercel.app/
+
+# Sitemaps
+Sitemap: -notes-five.vercel.app/sitemap.xml

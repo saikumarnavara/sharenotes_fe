@@ -2,6 +2,7 @@
   "name": "sharenotes",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -22,6 +23,7 @@
     "framer-motion": "^11.11.10",
     "lucide-react": "^0.453.0",
     "next": "14.2.14",
+    "next-sitemap": "^4.2.3",
     "quill": "^2.0.2",
     "react": "^18",
     "react-dom": "^18",
