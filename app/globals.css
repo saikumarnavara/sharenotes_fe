@@ -76,3 +76,29 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.custom-outline {
+  border-color: grey !important; /* Default border color */
+}
+
+.custom-outline:hover {
+  border-color: black !important; /* Hover border color */
+}
+
+.Mui-focused .custom-outline {
+  border-color: black !important; /* Focus (selected) border color */
+}
+
+.custom-tab {
+  color: grey; /* Inactive tab color */
+  font-weight: normal; /* Normal weight for inactive */
+}
+
+.custom-tab-selected {
+  color: black !important; /* Active tab color */
+  font-weight: bold; /* Bold text for active */
+}
+
+.tab-indicator {
+  background-color: black; /* Indicator color for the selected tab */
+}

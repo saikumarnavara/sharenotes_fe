@@ -196,11 +196,28 @@ export default function Home() {
           centered={!isMobile}
           variant={isMobile ? "scrollable" : "standard"}
           scrollButtons={isMobile ? "auto" : "off"}
+          classes={{ indicator: "tab-indicator" }} // Custom class for the indicator
         >
-          <Tab label="Share Notes" value="shareNotes" />
-          <Tab label="Share Image" value="shareImage" />
-          <Tab label="Share Code" value="shareCode" />
-          <Tab label="Share HTML" value="shareHtml" />
+          <Tab
+            label="Share Notes"
+            value="shareNotes"
+            classes={{ root: "custom-tab", selected: "custom-tab-selected" }} // Custom classes for tab styling
+          />
+          <Tab
+            label="Share Image"
+            value="shareImage"
+            classes={{ root: "custom-tab", selected: "custom-tab-selected" }}
+          />
+          <Tab
+            label="Share Code"
+            value="shareCode"
+            classes={{ root: "custom-tab", selected: "custom-tab-selected" }}
+          />
+          <Tab
+            label="Share HTML"
+            value="shareHtml"
+            classes={{ root: "custom-tab", selected: "custom-tab-selected" }}
+          />
         </Tabs>
 
         {/* Content for each tab */}
@@ -215,12 +232,15 @@ export default function Home() {
               placeholder="Write your note here..."
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              // sx={{
-              //   minHeight: "400px",
-              //   backgroundColor: "#f5f5f5",
-              //   borderRadius: "10px",
-              //   boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-              // }}
+              InputProps={{
+                style: {
+                  fontWeight: "bold",
+                  minHeight: "120px",
+                },
+                classes: {
+                  notchedOutline: "custom-outline",
+                },
+              }}
             />
           )}
 
