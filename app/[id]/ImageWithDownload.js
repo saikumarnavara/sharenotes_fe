@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Box, Button } from "@mui/material";
+import ShinyButton from "@/components/ui/shiny-button";
 
 const ImageWithDownloadButton = ({ notes }) => {
   return (
@@ -20,10 +21,8 @@ const ImageWithDownloadButton = ({ notes }) => {
       <img src={notes.msg} alt="Note Image" />
 
       {/* Download button */}
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ mt: 2 }}
+
+      <ShinyButton
         onClick={() => {
           const link = document.createElement("a");
           link.href = notes.msg; // Use the base64 image string as the href
@@ -33,8 +32,8 @@ const ImageWithDownloadButton = ({ notes }) => {
           document.body.removeChild(link);
         }}
       >
-        Download Image
-      </Button>
+        Download image
+      </ShinyButton>
     </Box>
   );
 };

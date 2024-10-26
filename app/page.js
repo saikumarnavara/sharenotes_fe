@@ -275,7 +275,7 @@ export default function Home() {
               fileOrFiles={image}
               label="Upload or drag and drop an image"
               multiple={false}
-              maxSize={2}
+              maxSize={10}
               onTypeError={(err) => alert(err)}
               onSizeError={(err) => alert(err)}
             />
@@ -408,7 +408,7 @@ export default function Home() {
 
             <Box
               display="flex"
-              flexDirection={isMobile ? "column" : "row"} // Column layout on mobile
+              flexDirection={isMobile ? "column" : "row"}
               justifyContent={isMobile ? "center" : "space-around"}
               alignItems="center"
               mt={2}

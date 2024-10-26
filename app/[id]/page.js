@@ -4,6 +4,8 @@ import CopyButton from "./CopyButton";
 import Loader from "./Loader";
 import ImageWithDownloadButton from "./ImageWithDownload";
 import Footer from "./Footer";
+import Header from "./Header";
+import { FireworksAnimations } from "./Fireworks";
 
 // This is a server component
 const NotePage = async ({ params }) => {
@@ -35,9 +37,29 @@ const NotePage = async ({ params }) => {
     switch (notes.response_type) {
       case "note":
         return (
-          <Typography variant="body1" gutterBottom>
-            {notes.msg}
-          </Typography>
+          <Paper
+            elevation={3}
+            sx={{
+              backgroundColor: "black",
+              padding: { xs: 1, sm: 2 },
+              width: "100%",
+            }}
+          >
+            <Typography
+              component="pre"
+              variant="body2"
+              gutterBottom
+              sx={{
+                fontFamily: "monospace",
+                padding: { xs: 1, sm: 2 },
+                color: "white",
+                width: "100%",
+                overflowX: "scroll",
+              }}
+            >
+              {notes.msg}
+            </Typography>
+          </Paper>
         );
       case "code":
         return (
@@ -102,6 +124,8 @@ const NotePage = async ({ params }) => {
         </Grid>
       ) : notes ? (
         <Grid item xs={12} sm={12} md={10} lg={8}>
+          <Header />
+          <FireworksAnimations />
           <Paper
             elevation={0}
             sx={{
