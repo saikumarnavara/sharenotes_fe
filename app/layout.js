@@ -84,25 +84,26 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* SEO Metadata */}
-        <title>Share-Notes - Secure Information Sharing</title>
+        <title>
+          Share-Notes - Online Notepad for Secure Code & Note Sharing
+        </title>
         <meta
           name="description"
-          content="Share-Notes is a platform for real-time, secure note sharing. Created by Growmore."
+          content="Share-Notes is a secure platform for sharing notes, code snippets, and text in real-time. Perfect for online notepad, private sharing, and time-limited access to information."
         />
         <meta
           name="keywords"
-          content="secure sharing, real-time notes, code snippets, privacy, information sharing"
+          content="share notes online,code share online ,growmore noteshare,growmore software,saikumar navara,sai kumar n, navara, online notepad, secure notepad, code sharing online, real-time text sharing, share images securely, share code snippets, privacy-focused sharing, free online notepad, instant note sharing, online document sharing"
         />
 
-        {/* Open Graph Metadata */}
+        <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content="Share-Notes - Real-Time & Secure Information Sharing"
+          content="Share-Notes - Online Notepad for Secure Code & Note Sharing"
         />
         <meta
           property="og:description"
-          content="Experience secure, private, and time-limited information sharing with Share-Notes."
+          content="Easily share notes, code, and images securely with Share-Notes. Time-limited access and privacy-focused sharing, optimized for real-time collaboration."
         />
         <meta property="og:url" content="https://share-notes-five.vercel.app" />
         <meta
@@ -110,21 +111,29 @@ export default function RootLayout({ children }) {
           content="https://share-notes-five.vercel.app/og-image.jpg"
         />
 
-        {/* Twitter Card Metadata */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Share-Notes - Secure & Real-Time Information Sharing"
+          content="Share-Notes - Online Notepad for Secure Code & Note Sharing"
         />
         <meta
           name="twitter:description"
-          content="Share notes, code, and media securely and privately with time-limited access."
+          content="Share notes, code, and media in real-time with secure, private, and time-limited access. Perfect for developers, students, and secure online note sharing."
         />
         <meta
           name="twitter:image"
           content="https://share-notes-five.vercel.app/twitter-image.jpg"
         />
+
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="Growmore" />
+        <meta name="language" content="English" />
+        <meta name="rating" content="General" />
+        <meta name="distribution" content="Global" />
+
+        <link rel="canonical" href="https://share-notes-five.vercel.app" />
       </head>
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

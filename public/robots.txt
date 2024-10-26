@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: -notes-five.vercel.app/
+Host: https://share-notes-five.vercel.app/
 
 # Sitemaps
-Sitemap: -notes-five.vercel.app/sitemap.xml
+Sitemap: https://share-notes-five.vercel.app/sitemap.xml

@@ -1,6 +1,6 @@
 // next-sitemap.config.js
 module.exports = {
-  siteUrl: "-notes-five.vercel.app/",
+  siteUrl: "https://share-notes-five.vercel.app/",
   generateRobotsTxt: true,
   sitemapSize: 7000,
   changefreq: "daily",
