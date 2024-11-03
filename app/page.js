@@ -42,7 +42,18 @@ export default function Home() {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fileTypes = ["JPG", "PNG", "GIF"];
+  const fileTypes = [
+    "JPG",
+    "PNG",
+    "GIF",
+    "JPEG",
+    "BMP",
+    "TIFF",
+    "WEBP",
+    "HEIF",
+    "HEIC",
+  ];
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const handleShare = async () => {

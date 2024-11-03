@@ -113,12 +113,21 @@ const NotePage = async ({ params }) => {
     <Grid>
       {error ? (
         <Grid item xs={12} sm={10} md={8} lg={6}>
-          <Paper elevation={3} sx={{ padding: 3, textAlign: "center" }}>
+          <Paper
+            elevation={3}
+            sx={{
+              padding: 3,
+              textAlign: "center",
+              marginBottom: "500px",
+              marginTop: "50px",
+            }}
+          >
             <Typography variant="h6" gutterBottom color="error">
               Error
             </Typography>
             <Typography variant="body2" color="error">
-              {error}
+              Unable to load notes. They may have expired or encountered an
+              error.
             </Typography>
           </Paper>
         </Grid>
@@ -193,9 +202,9 @@ const NotePage = async ({ params }) => {
                     Go to Notes
                   </Button>
 
-                  <Button variant="contained" color="primary">
+                  {/* <Button variant="contained" color="primary">
                     Random
-                  </Button>
+                  </Button> */}
                 </Stack>
               </Grid>
             </Grid>
