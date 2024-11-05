@@ -6,17 +6,22 @@ import ImageWithDownloadButton from "./ImageWithDownload";
 import Footer from "./Footer";
 import Header from "./Header";
 import { FireworksAnimations } from "./Fireworks";
+import ActiveNotes from "@/components/containers/active-notes/ActiveNotes";
 
 // This is a server component
 const NotePage = async ({ params }) => {
   const { id } = params;
   let notes = null;
   let error = null;
+  let refresh = false;
 
   try {
     const response = await fetch(`https://sharenotes-nu.vercel.app/${id}`, {
       cache: "no-store",
     });
+    if (response) {
+      refresh = true;
+    }
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -216,6 +221,7 @@ const NotePage = async ({ params }) => {
         <Loader />
       )}
       <Grid item xs={12}>
+        <ActiveNotes refresh={refresh} />
         <Footer />
       </Grid>
     </Grid>

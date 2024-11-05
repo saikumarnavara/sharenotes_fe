@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useTheme } from "@mui/material/styles";
 // import MonacoEditor from "react-monaco-editor";
 const MonacoEditor = dynamic(() => import("react-monaco-editor"), {
@@ -27,6 +27,7 @@ import Header from "./[id]/Header";
 import { FireworksAnimations } from "./[id]/Fireworks";
 import { FaFacebook, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import ShimmerButton from "@/components/ui/shimmer-button";
+import ActiveNotes from "@/components/containers/active-notes/ActiveNotes";
 
 // Load Quill dynamically
 const QuillNoSSRWrapper = dynamic(() => import("react-quill"), { ssr: false });
@@ -41,6 +42,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const fileTypes = [
     "JPG",
@@ -96,6 +98,9 @@ export default function Home() {
           }),
         }
       );
+      if (response.status === 200) {
+        setRefresh(true);
+      }
       if (response.status !== 200) {
         setMessage("Failed to share the content.");
         setLoading(false);
@@ -494,6 +499,7 @@ export default function Home() {
           marginTop: isMobile ? "280px" : "100px",
         }}
       >
+        <ActiveNotes refresh={refresh} />
         <Footer />
       </Grid>
     </div>
